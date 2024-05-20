@@ -14,6 +14,7 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signoutSuccess,
   updateFailure,
   updateStart,
   updateSuccess,
@@ -21,7 +22,7 @@ import {
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function DashProfile() {
-  const { currentUser,error } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -130,13 +131,29 @@ export default function DashProfile() {
         method: "DELETE",
       });
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         dispatch(deleteUserFailure(data.message));
-      }else{
+      } else {
         dispatch(deleteUserSuccess(data));
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -220,7 +237,9 @@ export default function DashProfile() {
         >
           Delete Account
         </span>
-        <span className=" cursor-pointer">Sign Out</span>
+        <span onClick={handleSignOut} className=" cursor-pointer">
+          Sign Out
+        </span>
       </div>
       {updateUserSucess && (
         <Alert color="success" className=" mt-5">
