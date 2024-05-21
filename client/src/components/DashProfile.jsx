@@ -7,6 +7,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import {Link} from 'react-router-dom';
 import { app } from "../FirebaseConfig";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -22,7 +23,7 @@ import {
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function DashProfile() {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error,loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -95,7 +96,7 @@ export default function DashProfile() {
     setImageFileUploadError(null);
     const storage = getStorage(app);
     const fileName = imageFile.name;
-    const storageRef = ref(storage, fileName);
+    const storageRef = ref(storage, "profile/" + fileName);
     const uploadTask = uploadBytesResumable(storageRef, imageFile);
     uploadTask.on(
       "state_changed",
@@ -224,9 +225,18 @@ export default function DashProfile() {
           placeholder="password"
           onChange={handleChange}
         />
-        <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-          Update
+        <Button type="submit" gradientDuoTone="purpleToBlue" outline disabled={loading || imageFileUploading}>
+          {loading ? 'Loading...' : 'Update'}
         </Button>
+        {
+          currentUser.isAdmin && (
+            <Link to={'/create-post'}>
+              <Button type="button" gradientDuoTone='purpleToPink' className=" w-full">
+                Create a post
+              </Button>
+            </Link>
+          )
+        }
       </form>
       <div className=" text-red-500 flex justify-between mt-5">
         <span
