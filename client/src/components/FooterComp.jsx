@@ -10,7 +10,8 @@ import {
 
 export default function FooterComp() {
   return (
-    <Footer container classname=" border border-t-8 border-teal-500">
+    <div className="border-t-8 border-teal-500">
+       <Footer container>
       <div className=" w-full max-w-7xl mx-auto">
         <div className="  grid w-full justify-between sm:flex md:grid-cols-1">
           <div className=" mt-5">
@@ -83,5 +84,7 @@ export default function FooterComp() {
         </div>
       </div>
     </Footer> 
+    </div>
+   
   );
 }
