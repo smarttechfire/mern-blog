@@ -38,7 +38,12 @@ export default function DashProfile() {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
 
+  console.log(currentUser.profilePicture);
+
+  console.log(formData);
+
   const filePickerRef = useRef();
+  console.log(currentUser);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -118,6 +123,7 @@ export default function DashProfile() {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
           setFormData({ ...formData, profilePicture: downloadURL });
+
           setImageFileUploading(false);
         });
       }
