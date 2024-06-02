@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table,Modal,Button } from "flowbite-react";
-import {Link} from "react-router-dom";
+import { FaCheck, FaTimes } from "react-icons/fa";
 
 import {HiOutlineExclamationCircle} from "react-icons/hi";
 
@@ -14,7 +14,6 @@ export default function DashUsers() {
   const [showModal, setShowModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState('');
   
-  console.log(users);
   
   
   useEffect(() => {
@@ -22,7 +21,6 @@ export default function DashUsers() {
       try {
         const res = await fetch(`/api/user/getusers`);
         const data = await res.json();
-        console.log(data);
         if (res.ok) {
           setUsers(data.users);
           if(data.users.length < 9){
@@ -45,7 +43,7 @@ export default function DashUsers() {
       const data = await res.json();
       if(res.ok){
         setUsers((prev) => [...prev,...data.users]);
-        if(data.users.length < 9){
+        if(data.users.length < 1){
           setShowMore(false);
         }
       }
@@ -66,34 +64,29 @@ export default function DashUsers() {
               <Table.HeadCell>Date created</Table.HeadCell>
               <Table.HeadCell>User Image</Table.HeadCell>
               <Table.HeadCell>Username</Table.HeadCell>
+              <Table.HeadCell>Email</Table.HeadCell>
               <Table.HeadCell>Admin</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
             {users.map((user) => (
-              <Table.Body key="" className=" divide-y">
+              <Table.Body key={user._id} className=" divide-y">
                 <Table.Row className=" bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
-                    {new Date(user.createddAt).toLocaleDateString()}
+                    {new Date(user.createdAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
                     
                       <img 
                         src={user.profilePicture}
                         alt={user.username}
-                        className='w-20 h-10 object-cover bg-gray-500'
+                        className='w-10 h-10 object-cover bg-gray-500 rounded-full'
                       />
                    
                   </Table.Cell>
+                  <Table.Cell>{user.username}</Table.Cell>
+                  <Table.Cell>{user.email}</Table.Cell>
                   <Table.Cell>
-                   
-                        {user.username}
-                      
-                  </Table.Cell>
-                  <Table.Cell>
-                    {user.email}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {user.isAdmin}
+                    {user.isAdmin ? (<FaCheck className=" text-green-500"/>) : (<FaTimes className=" text-red-500" />) }
                   </Table.Cell>
                   <Table.Cell>
                       <span onClick={() => {
